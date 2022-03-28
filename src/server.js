@@ -1,54 +1,46 @@
 const express = require("express");
-const passport = require("./configs/google_auth")
 const connect = require("./configs/db");
 
-const { register, login, newToken } = require("./controllers/auth.user.controller")
-const userController = require("./controllers/user.controller");
-const productController = require("./controllers/product.controller")
+
+const userController = require("./controllers/user.controller")
+ const TodoController = require("./controllers/todo.controller")
+
+ const {register,login} = require("./controllers/auth.controller")
 
 
 const app = express();
 
 app.use(express.json());
+
+
+ app.use("/users", userController)
+
 app.post("/register", register)
-app.post("/login", login)
 
-app.use("/product", productController);
+ app.post("/login", login)
 
-app.use("/users", userController);
-
-passport.serializeUser(function(user, done) {
-
-    done(null, user)
-})
-passport.deserializeUser(function(user, done) {
-
-    done(null, user)
-})
-
-app.get('/auth/google',
-    passport.authenticate('google', {
-        scope: ['email', 'profile']
-    }));
-
-app.get('/auth/google/callback',
-    passport.authenticate('google', {
-
-        failureRedirect: '/auth/google/failure'
-    }),
-    (req, res) => {
-        const token = newToken(req.user)
-        return res.send({ user: req.user, token })
-        return res.send(req.user)
-    }
-);
+app.use("/todo", TodoController)
 
 
-app.listen(4321, async() => {
-    try {
-        await connect();
-    } catch (err) {
-        console.error(err.message);
-    }
-    console.log("listening on port 4321");
-});
+
+
+
+
+
+  
+  
+
+
+
+
+   
+    
+    app.listen(4321, async () => {
+        try{
+            await connect();
+            console.log("listening on port 4321")
+        }
+        catch(err){
+            console.log(err.message);
+        }
+    });

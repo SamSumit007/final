@@ -1,5 +1,5 @@
 const express = require("express")
-const Product = require("../models/user.product")
+const Product = require("../models/todo.controller")
 const authanticate = require("../middlewares/authenticate")
 const authorise = require("../middlewares/authorise")
 
